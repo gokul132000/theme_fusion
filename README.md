@@ -1,7 +1,3 @@
-Perfect! Here’s your updated `README.md` with the **two new images** added in the `assets/` section — placed *after the Live Demo*, without changing any of your existing content or notes.
-
----
-
 ```markdown
 # 🌗 theme_fusion
 
