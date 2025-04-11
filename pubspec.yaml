@@ -34,3 +34,11 @@ platforms:
   macos:
   windows:
   linux:
+
+topics:
+  - flutter
+  - theme
+  - dark-mode
+  - light-mode
+  - theming
+  - theme_fusion
