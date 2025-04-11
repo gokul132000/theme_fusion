@@ -199,5 +199,3 @@ lib/
 
 MIT License • See [`LICENSE`](LICENSE) file for details.
 ```
-
-Let me know if you’d like to include thumbnails, dark/light toggles inside the preview section, or optimize for pub.dev’s mobile layout!
