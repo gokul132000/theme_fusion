@@ -1,7 +1,7 @@
 name: theme_fusion
 description: >
   A developer-friendly Flutter theme manager that enables easy switching between light and dark mode using identical color property names.
-version: 1.0.0
+version: 1.0.0+2
 homepage: https://pub.dev/packages/theme_fusion
 repository: https://github.com/Gokul132000/theme_fusion
 issue_tracker: https://github.com/Gokul132000/theme_fusion/issues
@@ -34,3 +34,10 @@ platforms:
   macos:
   windows:
   linux:
+
+topics:
+  - flutter
+  - theme
+  - dark-mode
+  - light-theme
+  - dynamic-theme
