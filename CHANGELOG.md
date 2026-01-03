@@ -1,3 +1,15 @@
+## [2.0.0+1] – Fully Dynamic Theme Engine
+
+🎉 Previous Version and Fixes:
+- Completely redesigned theme system (breaking change)
+- Supports unlimited dynamic themes (Light, Dark, Custom, Brand-based)
+- Themes defined using semantic color keys (`primary`, `text`, `background`, etc.)
+- Access colors using string extensions:
+  ```dart
+  'primary'.tc
+  'text'.tc
+  'background'.tc
+  
 ## [2.0.0] – Fully Dynamic Theme Engine
 
 🎉 Features:
