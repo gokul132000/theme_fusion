@@ -1,47 +1,40 @@
 import 'package:flutter/material.dart';
-import 'theme_fusion_core.dart';
-import 'theme_colors_base.dart';
+import 'theme_manager.dart';
 
-class ThemeFusionApp<T extends BaseThemeColors> extends StatefulWidget {
-  final T light;
-  final T dark;
-  final bool isDark;
-  final Widget Function(BuildContext context) builder;
+/// Wrap your MaterialApp as [child]. No context needed.
+/// Uses KeyedSubtree keyed by current theme to force a full subtree rebuild
+/// when theme changes, so UI updates immediately at runtime.
+class ThemeFusionApp extends StatelessWidget {
+  final String initialTheme;
+  final Color fallbackColor;
+  final Map<String, Map<String, Color>> themes;
+  final Widget child;
 
   const ThemeFusionApp({
     super.key,
-    required this.light,
-    required this.dark,
-    required this.builder,
-    this.isDark = false,
+    required this.initialTheme,
+    required this.fallbackColor,
+    required this.themes,
+    required this.child,
   });
 
   @override
-  State<ThemeFusionApp<T>> createState() => _ThemeFusionAppState<T>();
-}
-
-class _ThemeFusionAppState<T extends BaseThemeColors> extends State<ThemeFusionApp<T>> {
-  @override
-  void initState() {
-    super.initState();
-    themeFusion.init(
-      light: widget.light,
-      dark: widget.dark,
-      isDark: widget.isDark,
-    );
-    themeFusion.addListener(_rebuild);
-  }
-
-  void _rebuild() => setState(() {});
-
-  @override
-  void dispose() {
-    themeFusion.removeListener(_rebuild);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.builder(context);
+    // Initialize global controller once
+    initThemeFusion(
+      initialTheme: initialTheme,
+      themes: themes,
+      fallbackColor: fallbackColor,
+    );
+
+    return AnimatedBuilder(
+      animation: themeFusion,
+      builder: (context, _) {
+        return KeyedSubtree(
+          key: ValueKey<String>(themeFusion.value),
+          child: child,
+        );
+      },
+    );
   }
 }

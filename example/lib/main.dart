@@ -1,145 +1,223 @@
 import 'package:flutter/material.dart';
 import 'package:theme_fusion/theme_fusion.dart';
 
-/// Step 1: Define your custom theme class
-class AppTheme extends BaseThemeColors {
-  @override
-  final Color primary;
-  @override
-  final Color background;
-  @override
-  final Color text;
-/// Add your own custom color properties here if needed
-  final Color divider;
-  final Color button;
-
-  const AppTheme({
-    required this.primary,
-    required this.background,
-    required this.text,
-    required this.divider,
-    required this.button,
-  });
-}
-
-/// Step 2: Light and Dark Theme Colors
-const lightTheme = AppTheme(
-  primary: Color(0xFF1F1F1F),
-  background: Color(0xFFFFFFFF),
-  text: Color(0xFF1A1A1A),
-  divider: Color(0xFF2C2C2C),
-  button: Color(0xFF1F1F1F),
-);
-
-const darkTheme = AppTheme(
-  primary: Color(0xFF1F1F1F),
-  background: Color(0xFF121212),
-  text: Color(0xFFECECEC),
-  divider: Color(0xFFE0E0E0),
-  button: Color(0xFFCCCCCC),
-);
-
-/// Step 3: Entry Point
 void main() {
-  runApp(
-    ThemeFusionApp<AppTheme>(
-      light: lightTheme,
-      dark: darkTheme,
-      isDark: true, ///set initial theme mode
-      builder: (context) => MyApp(), /// don't use const here builder method
-    ),
-  );
+  runApp(const ThemeFusionExample());
 }
 
-/// Step 4: Global theme access
-AppTheme get theme => themeFusionColor<AppTheme>();
-bool get isDarkTheme => themeFusion.isDark;
-final themeToggle = themeFusion.toggle;
-final setLightTheme = themeFusion.setLightMode;
-final setDarkTheme = themeFusion.setDarkMode;
-
-/// Step 5: App UI
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// Root widget for ThemeFusion demo
+class ThemeFusionExample extends StatelessWidget {
+  const ThemeFusionExample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: theme.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: theme.primary,
-          brightness: isDarkTheme ? Brightness.dark : Brightness.light,
+    return ThemeFusionApp(
+      initialTheme: 'light',
+      fallbackColor: Colors.black,
+      themes: _themes,
+      child: MaterialApp(
+        theme: ThemeData( //want to override custom style
+          useMaterial3: true,
+          scaffoldBackgroundColor: 'background'.tc,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: 'primary'.tc,
+          ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: 'background'.tc,
+            titleTextStyle: TextStyle(
+                color: 'text'.tc,
+                fontSize: 20, fontWeight: FontWeight.w600
+            ),
+          ),
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: theme.background,
-          titleTextStyle: TextStyle(color: theme.text, fontSize: 20, fontWeight: FontWeight.w600),
+        debugShowCheckedModeBanner: false,
+        home: MyHome(),
+      ),
+    );
+  }
+}
+
+/// Theme definitions (semantic keys)
+const Map<String, Map<String, Color>> _themes = {
+  'light': {
+    'primary': Colors.blue,
+    'text': Colors.black,
+    'background': Colors.white,
+  },
+  'dark': {
+    'primary': Colors.deepPurple,
+    'text': Colors.white,
+    'background': Colors.black,
+  },
+  'warm': {
+    'primary': Colors.orange,
+    'text': Colors.black,
+    'background': Colors.white60,
+  },
+};
+
+/// Home screen
+class MyHome extends StatelessWidget {
+  const MyHome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: 'background'.tc,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: 'primary'.tc,
+        centerTitle: true,
+        title: Text(
+          'ThemeFusion',
+          style: TextStyle(
+            color: 'text'.tc,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: theme.background,
-        appBar: AppBar(
-          title: const Text('Theme Fusion'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Switch(
-                value: isDarkTheme,
-                onChanged: (_) => themeToggle(),
-                activeColor: theme.primary,
-                inactiveThumbColor: theme.divider,
-                activeTrackColor: theme.divider.withOpacity(0.4),
-                inactiveTrackColor: theme.divider.withOpacity(0.3),
-              ),
+      body: const _HomeContent(),
+    );
+  }
+}
+
+/// Main content
+class _HomeContent extends StatelessWidget {
+  const _HomeContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.palette_outlined,
+            size: 64,
+            color: 'primary'.tc,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Dynamic Theme Switching',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: 'text'.tc,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Current Mode: ${isDarkTheme ? "Dark" : "Light"}",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: theme.text,
-                ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Change the app appearance instantly\nusing ThemeFusion',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: 'text'.tc.withValues(alpha: 0.7),
+              fontSize: 14,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 32),
+          const _ThemeSelector(),
+        ],
+      ),
+    );
+  }
+}
+
+/// Theme selector card
+class _ThemeSelector extends StatelessWidget {
+  const _ThemeSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: 'primary'.tc.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Select Theme',
+            style: TextStyle(
+              color: 'text'.tc,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              _ThemeButton(
+                label: 'Light',
+                icon: Icons.light_mode_outlined,
+                themeKey: 'light',
               ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: setLightTheme,
-                      icon: const Icon(Icons.light_mode),
-                      label: const Text("Light Theme"),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.button,
-                        side: BorderSide(color: theme.button),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: setDarkTheme,
-                      icon: const Icon(Icons.dark_mode),
-                      label: const Text("Dark Theme"),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.button,
-                        side: BorderSide(color: theme.button),
-                      ),
-                    ),
-                  ),
-                ],
+              _ThemeButton(
+                label: 'Dark',
+                icon: Icons.dark_mode_outlined,
+                themeKey: 'dark',
+              ),
+              _ThemeButton(
+                label: 'Warm',
+                icon: Icons.color_lens_outlined,
+                themeKey: 'warm',
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Individual theme button
+class _ThemeButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final String themeKey;
+
+  const _ThemeButton({
+    required this.label,
+    required this.icon,
+    required this.themeKey,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => themeFusion.setTheme(themeKey),
+      child: Container(
+        width: 90,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: 'background'.tc,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: 'primary'.tc),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: 'text'.tc,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );

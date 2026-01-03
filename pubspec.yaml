@@ -24,8 +24,6 @@ flutter:
 
   assets:
     - assets/theme_fusion_demo.gif
-    - assets/light_theme.png
-    - assets/dark_theme.png
 
 platforms:
   android:

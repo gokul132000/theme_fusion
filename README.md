@@ -1,51 +1,58 @@
-```markdown
-# 🌗 theme_fusion
+<h1 align="center">
+  Theme Fusion
+  <br>
+</h1>
 
-[![Pub Version](https://img.shields.io/pub/v/theme_fusion)](https://pub.dev/packages/theme_fusion)
-[![GitHub Repo](https://img.shields.io/badge/github-gokul132000/theme__fusion-blue?logo=github)](https://github.com/Gokul132000/theme_fusion)
-![License](https://img.shields.io/github/license/Gokul132000/theme_fusion)
+<h4 align="center">
+  Real-time dynamic Flutter theme switching (Light, Dark, Multi-color) — fully runtime-based with minimal boilerplate.
+</h4>
 
-**theme_fusion** is a lightweight and developer-friendly package for real-time dynamic theme switching between **Light** and **Dark** modes — built with ❤️ by [Gokulram M.](https://github.com/Gokul132000)
+<p align="center">
+  <a href="https://pub.dev/packages/theme_fusion">
+    <img src="https://img.shields.io/pub/v/theme_fusion" alt="Pub Version">
+  </a>
+  <a href="https://github.com/Gokul132000/theme_fusion">
+    <img src="https://img.shields.io/badge/github-gokul132000/theme__fusion-blue?logo=github" alt="GitHub Repo">
+  </a>
+  <a href="https://www.buymeacoffee.com/Gokul132000">
+    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?style=flat" alt="Donate">
+  </a>
+</p>
 
----
+<p align="center">
+  <a href="#key-features">Key Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#important-rules">Important Rules</a> •
+  <a href="#license">License</a>
+</p>
 
-## 🎥 Live Demo
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Gokul132000/theme_fusion/main/assets/theme_fusion_demo.gif" alt="ThemeFusion Demo" />
+</p>
 
-![Theme Switching Demo](assets/theme_fusion_demo.gif)
-
----
-
-## 🖼️ Theme Preview
-
-### 🌞 Light Mode  
-![Light Theme Preview](assets/light_theme.png)
-
-### 🌚 Dark Mode  
-![Dark Theme Preview](assets/dark_theme.png)
-
----
-
-## ✨ Features
-
-- 🔁 Real-time **light/dark theme switching**
-- 💡 Define your own theme color models
-- 🧠 Access and control theme globally
-- 🧊 Smooth rebuilds without boilerplate
-- 📦 SharedPreferences for persistent themes
-- 💻 Supports Android, iOS, Web, and Desktop
 
 ---
 
-## 🚀 Installation
+## 🚀 Key Features
 
-Add to your `pubspec.yaml`:
+- 🔁 **True runtime theme switching** (no rebuild hacks)
+- 🎨 **Unlimited dynamic themes** (not limited to light/dark)
+- 🧠 **Semantic color keys** (`'primary'`, `'text'`, `'background'`)
+- 🧊 **No ThemeData dependency for colors**
+- 📦 Works on **Android, iOS, Web, Desktop**
+- ⚡ Minimal & predictable API
+
+---
+
+## 📦 Installation
+
+Add to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  theme_fusion: ^1.0.0
-```
-
-Then run:
+  theme_fusion: ^2.0.0
+````
 
 ```bash
 flutter pub get
@@ -53,148 +60,162 @@ flutter pub get
 
 ---
 
-## 🧪 Getting Started
+## 🧩 Usage (v2.0.0 – Dynamic Theme Model)
 
-### ✅ Step 1: Define your custom theme class
-
-```dart
-class AppTheme extends BaseThemeColors {
-  @override
-  final Color primary;
-  @override
-  final Color background;
-  @override
-  final Color text;
-// Add your own custom color properties here if needed
-  final Color divider;
-  final Color button;
-
-  const AppTheme({
-    required this.primary,
-    required this.background,
-    required this.text,
-    required this.divider,
-    required this.button,
-  });
-}
-```
-
----
-
-### ✅ Step 2: Declare light and dark theme values
-
-```dart
-const lightTheme = AppTheme(
-  primary: Color(0xFF1F1F1F),
-  background: Color(0xFFFFFFFF),
-  text: Color(0xFF1A1A1A),
-  divider: Color(0xFF2C2C2C),
-  button: Color(0xFF1F1F1F),
-);
-
-const darkTheme = AppTheme(
-  primary: Color(0xFF1F1F1F),
-  background: Color(0xFF121212),
-  text: Color(0xFFECECEC),
-  divider: Color(0xFFE0E0E0),
-  button: Color(0xFFCCCCCC),
-);
-```
-
----
-
-### ✅ Step 3: Wrap your app with `ThemeFusionApp`
-
-> ⚠️ Do **not** use `const` before the builder to allow dynamic rebuilding.
+### 1️⃣ Wrap your app with `ThemeFusionApp`
 
 ```dart
 void main() {
-  runApp(
-    ThemeFusionApp<AppTheme>(
-      light: lightTheme,
-      dark: darkTheme,
-      builder: (context) => MyApp(), // don't use const here
-    ),
-  );
+  runApp(const ThemeFusionExample());
+}
+
+class ThemeFusionExample extends StatelessWidget {
+  const ThemeFusionExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ThemeFusionApp(
+      initialTheme: 'light',
+      fallbackColor: Colors.black,
+      themes: _themes,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+
+        // ⚠️ ThemeData is STATIC only
+        theme: ThemeData(
+          useMaterial3: true,
+          scaffoldBackgroundColor: Colors.white,
+          dividerColor: Colors.grey.shade300,
+        ),
+
+        home: const MyHome(),
+      ),
+    );
+  }
 }
 ```
 
 ---
 
-### ✅ Step 4: Global theme access
+### 2️⃣ Define themes using semantic keys
 
 ```dart
-AppTheme get theme => themeFusionColor<AppTheme>();
-bool get isDarkTheme => themeFusion.isDark;
-
-final themeToggle = themeFusion.toggle;
-final setLightTheme = themeFusion.setLightMode;
-final setDarkTheme = themeFusion.setDarkMode;
+const Map<String, Map<String, Color>> _themes = {
+  'light': {
+    'primary': Colors.blue,
+    'text': Colors.black,
+    'background': Colors.white,
+  },
+  'dark': {
+    'primary': Colors.deepPurple,
+    'text': Colors.white,
+    'background': Colors.black,
+  },
+  'warm': {
+    'primary': Colors.orange,
+    'text': Colors.black,
+    'background': Colors.white60,
+  },
+};
 ```
-
-Use these anywhere to access the theme or change it on the fly.
 
 ---
 
-### ✅ Step 5: Apply in your UI
+### 3️⃣ Use dynamic colors **directly inside widgets**
 
 ```dart
-MaterialApp(
-  theme: ThemeData(
-    scaffoldBackgroundColor: theme.background,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: theme.primary,
-      brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: theme.background,
-      titleTextStyle: TextStyle(
-        color: theme.text,
-        fontWeight: FontWeight.w600,
-        fontSize: 20,
-      ),
-    ),
-  ),
-  home: Scaffold(
-    appBar: AppBar(
-      title: const Text("Theme Fusion"),
-      actions: [
-        Switch(
-          value: isDarkTheme,
-          onChanged: (_) => themeToggle(),
-        ),
-      ],
-    ),
-    body: Center(
-      child: Text(
-        "Current Mode: ${isDarkTheme ? "Dark" : "Light"}",
-        style: TextStyle(color: theme.text),
-      ),
+Scaffold(
+  backgroundColor: 'background'.tc,
+  appBar: AppBar(
+    backgroundColor: 'primary'.tc,
+    title: Text(
+      'Theme Fusion',
+      style: TextStyle(color: 'text'.tc),
     ),
   ),
 );
 ```
 
+✅ `.tc` automatically rebuilds when the theme changes
+❌ Do NOT store `.tc` in variables expecting reactivity
+
 ---
 
-## 📁 Suggested Folder Structure
+### 4️⃣ Switch themes dynamically
 
+```dart
+themeFusion.setTheme('light');
+themeFusion.setTheme('dark');
+themeFusion.setTheme('warm');
 ```
-lib/
-├── main.dart
-├── theme/
-│   └── app_theme.dart
+
+✔ No light/dark limitation
+✔ Unlimited custom themes
+✔ Instant UI update
+
+---
+
+## ⚠️ Important Rules (Read This)
+
+### ❌ Do NOT use `.tc` inside `ThemeData`
+
+```dart
+// ❌ WRONG — dynamic colors inside static ThemeData
+theme: ThemeData(
+  scaffoldBackgroundColor: 'background'.tc,
+  dividerColor: 'primary'.tc,
+);
+```
+
+**Reason:**
+
+* `ThemeData` is created once
+* `.tc` is runtime-based
+* Dynamic updates will NOT apply
+
+---
+
+### ✅ Correct Responsibility Split
+
+| Layer         | Purpose                                         |
+| ------------- | ----------------------------------------------- |
+| `ThemeData`   | Static base styles (divider, radius, elevation) |
+| `ThemeFusion` | All runtime colors                              |
+| `.tc`         | Use ONLY inside widgets                         |
+
+---
+
+### ✅ This is perfectly fine
+
+```dart
+theme: ThemeData(
+  dividerColor: Colors.grey.shade300,
+  scaffoldBackgroundColor: Colors.white,
+);
+```
+
+```dart
+Divider(color: 'primary'.tc);
 ```
 
 ---
 
-## 👨‍💻 Created by
+## 🧠 Version Difference
 
-**Gokulram M.**  
-[GitHub](https://github.com/Gokul132000) • [Portfolio](https://gokul132000.github.io)
+### v1.0.0
 
----
+* Light / Dark only
+* Theme-based toggling
+* Limited flexibility
 
-## 📄 License
+### v2.0.0 (Current)
 
-MIT License • See [`LICENSE`](LICENSE) file for details.
+* Fully dynamic themes
+* Unlimited theme keys
+* No `isDark`, no `toggle`
+* Runtime-safe color resolution
+
+## 📜 License
+
+MIT License
+See [`LICENSE`](LICENSE) for details.
