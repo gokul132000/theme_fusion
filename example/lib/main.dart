@@ -5,7 +5,6 @@ void main() {
   runApp(const ThemeFusionExample());
 }
 
-/// Root widget for ThemeFusion demo
 class ThemeFusionExample extends StatelessWidget {
   const ThemeFusionExample({super.key});
 
@@ -15,29 +14,29 @@ class ThemeFusionExample extends StatelessWidget {
       initialTheme: 'light',
       fallbackColor: Colors.black,
       themes: _themes,
-      child: MaterialApp(
-        theme: ThemeData( //want to override custom style
-          useMaterial3: true,
-          scaffoldBackgroundColor: 'background'.tc,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: 'primary'.tc,
-          ),
-          appBarTheme: AppBarTheme(
-            backgroundColor: 'background'.tc,
-            titleTextStyle: TextStyle(
-                color: 'text'.tc,
-                fontSize: 20, fontWeight: FontWeight.w600
+      child: Builder(
+        builder: (context) {
+          // Use ThemeData minimally for static overrides only
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              useMaterial3: true,
+              // Static defaults, avoid .tc here
+              dividerTheme: const DividerThemeData(color: Colors.grey),
+              // AppBarTheme default, override dynamically in AppBar widget
+              appBarTheme: const AppBarTheme(
+                elevation: 0,
+              ),
             ),
-          ),
-        ),
-        debugShowCheckedModeBanner: false,
-        home: MyHome(),
+            home: const MyHome(),
+          );
+        },
       ),
     );
   }
 }
 
-/// Theme definitions (semantic keys)
+// Theme definitions with semantic keys
 const Map<String, Map<String, Color>> _themes = {
   'light': {
     'primary': Colors.blue,
@@ -56,22 +55,21 @@ const Map<String, Map<String, Color>> _themes = {
   },
 };
 
-/// Home screen
 class MyHome extends StatelessWidget {
   const MyHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: 'background'.tc,
+      backgroundColor: 'background'.tc, // dynamic
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: 'primary'.tc,
+        backgroundColor: 'primary'.tc, // dynamic
         centerTitle: true,
         title: Text(
           'ThemeFusion',
           style: TextStyle(
-            color: 'text'.tc,
+            color: 'text'.tc, // dynamic
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -81,7 +79,6 @@ class MyHome extends StatelessWidget {
   }
 }
 
-/// Main content
 class _HomeContent extends StatelessWidget {
   const _HomeContent();
 
@@ -92,11 +89,7 @@ class _HomeContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.palette_outlined,
-            size: 64,
-            color: 'primary'.tc,
-          ),
+          Icon(Icons.palette_outlined, size: 64, color: 'primary'.tc),
           const SizedBox(height: 16),
           Text(
             'Dynamic Theme Switching',
@@ -125,7 +118,6 @@ class _HomeContent extends StatelessWidget {
   }
 }
 
-/// Theme selector card
 class _ThemeSelector extends StatelessWidget {
   const _ThemeSelector();
 
@@ -151,21 +143,9 @@ class _ThemeSelector extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
-              _ThemeButton(
-                label: 'Light',
-                icon: Icons.light_mode_outlined,
-                themeKey: 'light',
-              ),
-              _ThemeButton(
-                label: 'Dark',
-                icon: Icons.dark_mode_outlined,
-                themeKey: 'dark',
-              ),
-              _ThemeButton(
-                label: 'Warm',
-                icon: Icons.color_lens_outlined,
-                themeKey: 'warm',
-              ),
+              _ThemeButton(label: 'Light', icon: Icons.light_mode_outlined, themeKey: 'light'),
+              _ThemeButton(label: 'Dark', icon: Icons.dark_mode_outlined, themeKey: 'dark'),
+              _ThemeButton(label: 'Warm', icon: Icons.color_lens_outlined, themeKey: 'warm'),
             ],
           ),
         ],
@@ -174,17 +154,12 @@ class _ThemeSelector extends StatelessWidget {
   }
 }
 
-/// Individual theme button
 class _ThemeButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final String themeKey;
 
-  const _ThemeButton({
-    required this.label,
-    required this.icon,
-    required this.themeKey,
-  });
+  const _ThemeButton({required this.label, required this.icon, required this.themeKey});
 
   @override
   Widget build(BuildContext context) {
@@ -211,11 +186,7 @@ class _ThemeButton extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
-              style: TextStyle(
-                color: 'text'.tc,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: 'text'.tc, fontSize: 13, fontWeight: FontWeight.w500),
             ),
           ],
         ),
